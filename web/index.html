@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Priva-MCP — Privacy &amp; Compliance Layer for MCP</title>
+  <meta name="description" content="A zero-trust man-in-the-middle MCP proxy that masks sensitive banking PII (CIF, account, PAN, balance) before it ever reaches Claude. Built with the official MCP TypeScript SDK." />
+  <meta property="og:title" content="Priva-MCP — Privacy & Compliance Layer for MCP" />
+  <meta property="og:description" content="Zero-trust MCP proxy that scrubs sensitive data before it reaches the LLM." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --bg-soft: #0f1525;
+      --panel: #131a2e;
+      --panel-2: #182039;
+      --border: #232c45;
+      --text: #e6ebf5;
+      --muted: #9aa6c2;
+      --faint: #6b779a;
+      --accent: #5b8cff;
+      --accent-2: #7c5cff;
+      --green: #38d39f;
+      --red: #ff5c7c;
+      --amber: #ffb454;
+      --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+    .accent { color: var(--accent); }
+    .grad-text {
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(10, 14, 26, 0.72);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-in { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.02em; }
+    .brand .logo { font-size: 22px; }
+    .nav-links { display: flex; align-items: center; gap: 26px; }
+    .nav-links a { color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 14px;
+      border: 1px solid var(--border); transition: all .2s; cursor: pointer;
+    }
+    .btn-primary { background: linear-gradient(120deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-ghost { background: var(--panel); color: var(--text); }
+    .btn-ghost:hover { background: var(--panel-2); border-color: var(--accent); }
+    @media (max-width: 720px) { .nav-links a:not(.btn) { display: none; } }
+
+    /* Hero */
+    .hero { position: relative; padding: 96px 0 72px; text-align: center; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background:
+        radial-gradient(600px 300px at 50% -10%, rgba(91,140,255,.18), transparent 70%),
+        radial-gradient(500px 260px at 80% 10%, rgba(124,92,255,.14), transparent 70%);
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px; font-size: 13px; color: var(--muted);
+      border: 1px solid var(--border); background: var(--panel); margin-bottom: 24px;
+    }
+    .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+    h1 { font-size: clamp(34px, 6vw, 60px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; }
+    .hero p.lead { max-width: 660px; margin: 22px auto 0; font-size: clamp(16px, 2.2vw, 20px); color: var(--muted); }
+    .hero-cta { display: flex; gap: 14px; justify-content: center; margin-top: 36px; flex-wrap: wrap; }
+    .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+    .badge { font-family: var(--mono); font-size: 12px; color: var(--faint); padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-soft); }
+
+    /* Sections */
+    section { padding: 72px 0; }
+    .eyebrow { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+    h2 { font-size: clamp(26px, 4vw, 38px); letter-spacing: -0.02em; margin: 10px 0 14px; font-weight: 800; }
+    .section-sub { color: var(--muted); max-width: 640px; font-size: 16px; }
+    .center { text-align: center; margin-inline: auto; }
+
+    /* Flow diagram */
+    .flow {
+      margin-top: 44px; display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: stretch;
+    }
+    .node {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 22px 18px; text-align: center;
+    }
+    .node.proxy { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(91,140,255,.25), 0 12px 40px -20px rgba(91,140,255,.6); background: linear-gradient(180deg, var(--panel-2), var(--panel)); }
+    .node .ic { font-size: 26px; }
+    .node h4 { margin-top: 8px; font-size: 15px; }
+    .node small { color: var(--faint); font-size: 12px; }
+    .arrow { display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 22px; }
+    .proxy ul { list-style: none; margin-top: 12px; text-align: left; display: inline-block; }
+    .proxy ul li { font-size: 12px; color: var(--muted); padding: 2px 0; }
+    .proxy ul li::before { content: "→ "; color: var(--accent); }
+    @media (max-width: 800px) {
+      .flow { grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); }
+    }
+
+    /* Features grid */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 44px; }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 24px;
+      transition: transform .2s, border-color .2s;
+    }
+    .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .card .ic { font-size: 24px; }
+    .card h3 { font-size: 17px; margin: 14px 0 8px; }
+    .card p { color: var(--muted); font-size: 14px; }
+
+    /* Before / after table */
+    .ba {
+      margin-top: 44px; border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+      background: var(--panel); font-family: var(--mono); font-size: 13px;
+    }
+    .ba-row { display: grid; grid-template-columns: 1.2fr 1.3fr 1.2fr; }
+    .ba-row > div { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .ba-row:last-child > div { border-bottom: none; }
+    .ba-head > div { background: var(--bg-soft); color: var(--faint); font-family: var(--sans); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+    .ba .key { color: var(--accent); }
+    .ba .in { color: var(--red); }
+    .ba .out { color: var(--green); }
+    .ba-row > div:nth-child(2), .ba-row > div:nth-child(3) { border-left: 1px solid var(--border); }
+    @media (max-width: 700px) { .ba-row { grid-template-columns: 1fr; } .ba-row > div { border-left: none !important; } }
+
+    /* Code blocks */
+    .code {
+      position: relative; background: #060912; border: 1px solid var(--border); border-radius: 14px;
+      padding: 18px 18px; margin-top: 16px; overflow-x: auto;
+    }
+    .code pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: #cdd6f4; white-space: pre; }
+    .code .cm { color: var(--faint); }
+    .code .tok { color: var(--accent); }
+    .code .str { color: var(--green); }
+    .copy {
+      position: absolute; top: 10px; right: 10px; font-size: 11px; padding: 5px 10px;
+      background: var(--panel-2); border: 1px solid var(--border); border-radius: 7px; color: var(--muted); cursor: pointer; transition: all .15s;
+    }
+    .copy:hover { color: var(--text); border-color: var(--accent); }
+    .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 36px; }
+    @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+    .step h3 { font-size: 16px; display: flex; align-items: center; gap: 10px; }
+    .step .num { width: 26px; height: 26px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; color: var(--accent); font-family: var(--mono); }
+
+    /* Block demo */
+    .demo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 40px; }
+    @media (max-width: 760px) { .demo { grid-template-columns: 1fr; } }
+    .demo .panelbox { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+    .demo .panelbox.bad { border-color: rgba(255,92,124,.4); }
+    .demo .panelbox.good { border-color: rgba(56,211,159,.4); }
+    .tag { font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 6px; text-transform: uppercase; letter-spacing: .05em; }
+    .tag.red { background: rgba(255,92,124,.14); color: var(--red); }
+    .tag.green { background: rgba(56,211,159,.14); color: var(--green); }
+    .demo pre { font-family: var(--mono); font-size: 12px; margin-top: 12px; white-space: pre-wrap; color: var(--muted); }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); padding: 40px 0; color: var(--faint); font-size: 14px; }
+    .foot-in { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .foot-links { display: flex; gap: 20px; }
+    .foot-links a:hover { color: var(--text); }
+    .disclaimer { margin-top: 14px; font-size: 12px; color: var(--faint); max-width: 720px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="wrap nav-in">
+      <a class="brand" href="#top"><span class="logo">🛡️</span> Priva-MCP</a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#redaction">Redaction</a>
+        <a href="#start">Quick start</a>
+        <a class="btn btn-ghost" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">★ GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="wrap">
+      <span class="pill"><span class="dot"></span> Zero-trust privacy layer for the Model Context Protocol</span>
+      <h1>Stop sensitive data <br /> before it reaches <span class="grad-text">the LLM</span></h1>
+      <p class="lead">
+        Priva-MCP is a man-in-the-middle MCP proxy that masks banking PII — CIF,
+        account numbers, debit-card PANs, balances, emails, phones — at the field
+        level, and <strong>blocks</strong> any response carrying a forbidden secret.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#start">Get started →</a>
+        <a class="btn btn-ghost" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+      <div class="badges">
+        <span class="badge">TypeScript · strict</span>
+        <span class="badge">@modelcontextprotocol/sdk</span>
+        <span class="badge">Node 18+</span>
+        <span class="badge">28 tests passing</span>
+        <span class="badge">ELK / Logstash ready</span>
+      </div>
+    </div>
+  </header>
+
+  <section id="how">
+    <div class="wrap">
+      <p class="eyebrow center">Architecture</p>
+      <h2 class="center">A proxy that sits in the middle</h2>
+      <p class="section-sub center">
+        Claude never talks to your core banking API directly. Every tool result is
+        intercepted, scrubbed, audited — and blocked if it carries a hard secret.
+      </p>
+      <div class="flow">
+        <div class="node">
+          <div class="ic">🤖</div>
+          <h4>Claude</h4>
+          <small>MCP client</small>
+        </div>
+        <div class="arrow">⇄</div>
+        <div class="node proxy">
+          <div class="ic">🛡️</div>
+          <h4>Priva-MCP</h4>
+          <ul>
+            <li>dual-layer redaction</li>
+            <li>zero-trust block</li>
+            <li>audit trail</li>
+            <li>SIEM incidents</li>
+          </ul>
+        </div>
+        <div class="arrow">⇄</div>
+        <div class="node">
+          <div class="ic">🏦</div>
+          <h4>Core Banking</h4>
+          <small>IST / internal API</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" style="background: var(--bg-soft);">
+    <div class="wrap">
+      <p class="eyebrow center">Why Priva-MCP</p>
+      <h2 class="center">Built for compliance, not convenience</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="ic">🎯</div>
+          <h3>Dual-layer redaction</h3>
+          <p>Layer 1 masks by field key name (precise); Layer 2 is a global regex fallback for free text. No more 16-digit NIK mistaken for a credit card.</p>
+        </div>
+        <div class="card">
+          <div class="ic">🏦</div>
+          <h3>Banking field rules</h3>
+          <p>First-class handling for <code>cifNumber</code>, <code>accountNumber</code>, <code>pan</code>, <code>phoneNumber</code> and more — case-insensitive, collision-safe.</p>
+        </div>
+        <div class="card">
+          <div class="ic">🔢</div>
+          <h3>Numeric safety</h3>
+          <p>Balances and amounts keep their JSON <em>number</em> type so the AI can still compute. Under strict mode they are zeroed, never corrupted to <code>"X"</code>.</p>
+        </div>
+        <div class="card">
+          <div class="ic">🚫</div>
+          <h3>Zero-trust block</h3>
+          <p>A leaked <code>password</code>, <code>pin</code>, <code>cvv</code> or <code>secret</code> blocks the entire response. Claude gets a safe error; the secret value is never logged.</p>
+        </div>
+        <div class="card">
+          <div class="ic">📜</div>
+          <h3>Audit + SIEM</h3>
+          <p>Every call logged to <code>audit.log</code> (JSON Lines). Severe breaches emit an ECS-style incident to stderr for ELK / Logstash ingestion.</p>
+        </div>
+        <div class="card">
+          <div class="ic">🧪</div>
+          <h3>Type-safe &amp; tested</h3>
+          <p>Strict TypeScript, zero <code>any</code>, recursive traversal of untrusted JSON, and 28 unit tests via the built-in <code>node:test</code> runner.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="redaction">
+    <div class="wrap">
+      <p class="eyebrow center">Field-level redaction</p>
+      <h2 class="center">Raw in → scrubbed out</h2>
+      <p class="section-sub center">What the core banking API returns vs. what Claude actually receives (strict mode).</p>
+      <div class="ba">
+        <div class="ba-row ba-head">
+          <div>Field</div><div>Raw (from API)</div><div>Returned to Claude</div>
+        </div>
+        <div class="ba-row"><div class="key">cifNumber</div><div class="in">CIF-7782001</div><div class="out">REDACTED-CIF</div></div>
+        <div class="ba-row"><div class="key">accountNumber</div><div class="in">0012345678901</div><div class="out">XXXXXXXXX8901</div></div>
+        <div class="ba-row"><div class="key">pan</div><div class="in">4111111111111111</div><div class="out">XXXX-XXXX-XXXX-1111</div></div>
+        <div class="ba-row"><div class="key">phoneNumber</div><div class="in">+6281234567890</div><div class="out">+XXXXXXXXXX890</div></div>
+        <div class="ba-row"><div class="key">email</div><div class="in">andi.wijaya@example.com</div><div class="out">a***a@e***.com</div></div>
+        <div class="ba-row"><div class="key">balance</div><div class="in">15750000</div><div class="out">0 &nbsp;<span style="color:var(--faint)">(number kept)</span></div></div>
+        <div class="ba-row"><div class="key">customerName</div><div class="in">Andi Wijaya</div><div class="out">Andi Wijaya &nbsp;<span style="color:var(--faint)">(not PII)</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="blocking" style="background: var(--bg-soft);">
+    <div class="wrap">
+      <p class="eyebrow center">Zero-trust</p>
+      <h2 class="center">When a hard secret leaks, nothing gets through</h2>
+      <p class="section-sub center">If the upstream accidentally includes a <code>pin</code>, the whole payload is dropped.</p>
+      <div class="demo">
+        <div class="panelbox bad">
+          <span class="tag red">→ stdout (to Claude)</span>
+          <pre>{
+  "content": [{
+    "type": "text",
+    "text": "Error: response blocked by
+      privacy &amp; compliance policy."
+  }],
+  "isError": true
+}</pre>
+        </div>
+        <div class="panelbox good">
+          <span class="tag green">→ stderr (to ELK / Logstash)</span>
+          <pre>{
+  "@timestamp": "...",
+  "log.level": "error",
+  "event.action":
+    "compliance.critical_violation",
+  "event.outcome": "blocked",
+  "violations": [
+    { "path": "$.pin", "key": "pin" }
+  ]
+}</pre>
+        </div>
+      </div>
+      <p class="section-sub center" style="margin-top:22px;">
+        The incident logs the <strong>key, path and reason</strong> — never the secret value itself.
+      </p>
+    </div>
+  </section>
+
+  <section id="start">
+    <div class="wrap">
+      <p class="eyebrow center">Implementation</p>
+      <h2 class="center">Run it in under a minute</h2>
+      <div class="steps">
+        <div class="step">
+          <h3><span class="num">1</span> Clone &amp; install</h3>
+          <div class="code">
+            <button class="copy">copy</button>
+            <pre>git clone https://github.com/adhidevara/priva-mcp.git
+cd priva-mcp
+npm install</pre>
+          </div>
+        </div>
+        <div class="step">
+          <h3><span class="num">2</span> Build &amp; test</h3>
+          <div class="code">
+            <button class="copy">copy</button>
+            <pre>npm run build
+npm test    <span class="cm"># 28 passing</span>
+npm start   <span class="cm"># serve over stdio</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:48px; font-size:18px;">Connect to Claude Desktop</h3>
+      <p class="section-sub">Add this to <code>claude_desktop_config.json</code> (use an absolute path to <code>dist/server.js</code>), then restart Claude Desktop.</p>
+      <div class="code">
+        <button class="copy">copy</button>
+<pre>{
+  <span class="tok">"mcpServers"</span>: {
+    <span class="tok">"priva-mcp"</span>: {
+      <span class="tok">"command"</span>: <span class="str">"node"</span>,
+      <span class="tok">"args"</span>: [<span class="str">"/abs/path/to/priva-mcp/dist/server.js"</span>],
+      <span class="tok">"env"</span>: {
+        <span class="tok">"COMPLIANCE_STRICT"</span>: <span class="str">"true"</span>,
+        <span class="tok">"AUDIT_LOG_PATH"</span>: <span class="str">"/abs/path/to/priva-mcp/audit.log"</span>
+      }
+    }
+  }
+}</pre>
+      </div>
+
+      <h3 style="margin-top:40px; font-size:18px;">Call a tool</h3>
+      <p class="section-sub">Two tools ship out of the box. Mock CIFs: <code>CIF-7782001</code>, <code>CIF-7782002</code>.</p>
+      <div class="code">
+        <button class="copy">copy</button>
+<pre><span class="cm">// in Claude:</span>
+get_customer_profile  { cifNumber: <span class="str">"CIF-7782001"</span> }
+get_financial_report  { cifNumber: <span class="str">"CIF-7782001"</span> }
+<span class="cm">// → returns a fully masked, audited payload</span></pre>
+      </div>
+
+      <div class="center" style="margin-top:48px;">
+        <a class="btn btn-primary" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">Read the full docs on GitHub →</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-in">
+        <div><span class="brand"><span class="logo">🛡️</span> Priva-MCP</span> — Privacy &amp; Compliance Layer</div>
+        <div class="foot-links">
+          <a href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP</a>
+          <a href="#top">Back to top</a>
+        </div>
+      </div>
+      <p class="disclaimer">
+        Demo project. All data shown is synthetic test data — card numbers are valid
+        only in the Luhn-checksum sense. Not affiliated with any bank. Review and
+        harden before production use.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Copy-to-clipboard for code blocks
+    document.querySelectorAll('.copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var pre = btn.parentElement.querySelector('pre');
+        var text = pre ? pre.innerText : '';
+        navigator.clipboard.writeText(text).then(function () {
+          var old = btn.textContent;
+          btn.textContent = 'copied!';
+          setTimeout(function () { btn.textContent = old; }, 1400);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

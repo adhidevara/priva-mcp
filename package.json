@@ -1,0 +1,40 @@
+{
+  "name": "priva-mcp",
+  "version": "1.0.0",
+  "description": "Priva-MCP — Privacy & Compliance Layer. A man-in-the-middle MCP proxy that scrubs sensitive data (PII, cards, NIK) from internal tool output before it reaches the Claude client.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "priva-mcp": "dist/server.js"
+  },
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "test": "node --import tsx --test test/masking.test.ts test/patterns.test.ts test/redactor.test.ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "privacy",
+    "compliance",
+    "pii",
+    "data-masking",
+    "proxy"
+  ],
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}
