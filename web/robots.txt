@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://priva-mcp.vercel.app/sitemap.xml
