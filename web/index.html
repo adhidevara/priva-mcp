@@ -8,6 +8,21 @@
   <meta property="og:title" content="Priva-MCP — Privacy & Compliance Layer for MCP" />
   <meta property="og:description" content="Zero-trust MCP proxy that scrubs sensitive data before it reaches the LLM." />
   <meta property="og:type" content="website" />
+  <link rel="canonical" href="/" />
+  <link rel="alternate" hreflang="en" href="/" />
+  <link rel="alternate" hreflang="id" href="/id.html" />
+  <link rel="alternate" hreflang="x-default" href="/" />
+  <script>
+    // Auto-redirect first-time Indonesian-locale visitors to /id.html.
+    // Respects an explicit language choice saved in localStorage (no loop).
+    (function () {
+      try {
+        if (localStorage.getItem('priva-lang')) return;
+        var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        if (lang.indexOf('id') === 0) location.replace('/id.html');
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
   <style>
     :root {
@@ -191,7 +206,7 @@
         <a href="#features">Features</a>
         <a href="#redaction">Redaction</a>
         <a href="#start">Quick start</a>
-        <a href="/id.html" title="Bahasa Indonesia">🇮🇩 ID</a>
+        <a href="/id.html" title="Bahasa Indonesia" onclick="try{localStorage.setItem('priva-lang','id')}catch(e){}">🇮🇩 ID</a>
         <a class="btn btn-ghost" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">★ GitHub</a>
       </div>
     </div>

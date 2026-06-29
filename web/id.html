@@ -8,6 +8,10 @@
   <meta property="og:title" content="Priva-MCP — Lapisan Privasi & Kepatuhan untuk MCP" />
   <meta property="og:description" content="Proxy MCP zero-trust yang menyensor data sensitif sebelum sampai ke LLM." />
   <meta property="og:type" content="website" />
+  <link rel="canonical" href="/id.html" />
+  <link rel="alternate" hreflang="en" href="/" />
+  <link rel="alternate" hreflang="id" href="/id.html" />
+  <link rel="alternate" hreflang="x-default" href="/" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
   <style>
     :root {
@@ -191,7 +195,7 @@
         <a href="#features">Fitur</a>
         <a href="#redaction">Penyensoran</a>
         <a href="#start">Mulai cepat</a>
-        <a href="/" title="English">🇬🇧 EN</a>
+        <a href="/" title="English" onclick="try{localStorage.setItem('priva-lang','en')}catch(e){}">🇬🇧 EN</a>
         <a class="btn btn-ghost" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">★ GitHub</a>
       </div>
     </div>
@@ -417,7 +421,7 @@ get_financial_report  { cifNumber: <span class="str">"CIF-7782001"</span> }
         <div class="foot-links">
           <a href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">GitHub</a>
           <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP</a>
-          <a href="/">English</a>
+          <a href="/" onclick="try{localStorage.setItem('priva-lang','en')}catch(e){}">English</a>
           <a href="#top">Ke atas</a>
         </div>
       </div>
