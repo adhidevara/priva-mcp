@@ -1,7 +1,7 @@
 /**
- * Mock "internal" banking core. Simulates responses from a Core Banking / IST
- * API (the kind that backs an M-Banking app). The gateway returns RAW,
- * unredacted records on purpose — scrubbing is the compliance engine's job.
+ * Mock "internal" datastore. Simulates responses from an internal API (the
+ * kind that backs a banking-style app). The gateway returns RAW, unredacted
+ * records on purpose — scrubbing is the compliance engine's job.
  *
  * Field names match a realistic banking payload (`accountNumber`, `cifNumber`,
  * `pan`, `phoneNumber`, `balance`, `customerName`) so the key-context
@@ -11,7 +11,7 @@
  * the Luhn-checksum sense (standard test PANs).
  */
 
-/** A customer's banking profile as returned by the core API. */
+/** A customer's profile as returned by the internal API. */
 export interface BankAccountProfile {
   readonly cifNumber: string; // Customer Information File — master key
   readonly customerName: string;

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Priva-MCP — Privacy &amp; Compliance Layer for MCP</title>
-  <meta name="description" content="A zero-trust man-in-the-middle MCP proxy that masks sensitive PII (CIF, account, PAN, balance) before it ever reaches Claude. Built with the official MCP TypeScript SDK." />
-  <meta property="og:title" content="Priva-MCP — Privacy & Compliance Layer for MCP" />
-  <meta property="og:description" content="Zero-trust MCP proxy that scrubs sensitive data before it reaches the LLM." />
+  <title>Priva-MCP — Lapisan Privasi &amp; Kepatuhan untuk MCP</title>
+  <meta name="description" content="Proxy MCP man-in-the-middle zero-trust yang menyensor PII sensitif (CIF, rekening, PAN, saldo) sebelum sampai ke Claude. Dibangun dengan MCP TypeScript SDK resmi." />
+  <meta property="og:title" content="Priva-MCP — Lapisan Privasi & Kepatuhan untuk MCP" />
+  <meta property="og:description" content="Proxy MCP zero-trust yang menyensor data sensitif sebelum sampai ke LLM." />
   <meta property="og:type" content="website" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
   <style>
@@ -84,7 +84,7 @@
     }
     .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
     h1 { font-size: clamp(34px, 6vw, 60px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; }
-    .hero p.lead { max-width: 660px; margin: 22px auto 0; font-size: clamp(16px, 2.2vw, 20px); color: var(--muted); }
+    .hero p.lead { max-width: 680px; margin: 22px auto 0; font-size: clamp(16px, 2.2vw, 20px); color: var(--muted); }
     .hero-cta { display: flex; gap: 14px; justify-content: center; margin-top: 36px; flex-wrap: wrap; }
     .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
     .badge { font-family: var(--mono); font-size: 12px; color: var(--faint); padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-soft); }
@@ -93,7 +93,7 @@
     section { padding: 72px 0; }
     .eyebrow { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
     h2 { font-size: clamp(26px, 4vw, 38px); letter-spacing: -0.02em; margin: 10px 0 14px; font-weight: 800; }
-    .section-sub { color: var(--muted); max-width: 640px; font-size: 16px; }
+    .section-sub { color: var(--muted); max-width: 660px; font-size: 16px; }
     .center { text-align: center; margin-inline: auto; }
 
     /* Flow diagram */
@@ -187,11 +187,11 @@
     <div class="wrap nav-in">
       <a class="brand" href="#top"><span class="logo">🛡️</span> Priva-MCP</a>
       <div class="nav-links">
-        <a href="#how">How it works</a>
-        <a href="#features">Features</a>
-        <a href="#redaction">Redaction</a>
-        <a href="#start">Quick start</a>
-        <a href="/id.html" title="Bahasa Indonesia">🇮🇩 ID</a>
+        <a href="#how">Cara kerja</a>
+        <a href="#features">Fitur</a>
+        <a href="#redaction">Penyensoran</a>
+        <a href="#start">Mulai cepat</a>
+        <a href="/" title="English">🇬🇧 EN</a>
         <a class="btn btn-ghost" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">★ GitHub</a>
       </div>
     </div>
@@ -199,55 +199,55 @@
 
   <header class="hero" id="top">
     <div class="wrap">
-      <span class="pill"><span class="dot"></span> Zero-trust privacy layer for the Model Context Protocol</span>
-      <h1>Stop sensitive data <br /> before it reaches <span class="grad-text">the LLM</span></h1>
+      <span class="pill"><span class="dot"></span> Lapisan privasi zero-trust untuk Model Context Protocol</span>
+      <h1>Hentikan data sensitif <br /> sebelum sampai ke <span class="grad-text">LLM</span></h1>
       <p class="lead">
-        Priva-MCP is a man-in-the-middle MCP proxy that masks sensitive PII — CIF,
-        account numbers, debit-card PANs, balances, emails, phones — at the field
-        level, and <strong>blocks</strong> any response carrying a forbidden secret.
+        Priva-MCP adalah proxy MCP man-in-the-middle yang menyensor PII — CIF,
+        nomor rekening, PAN kartu debit, saldo, email, telepon — di level field,
+        dan <strong>memblokir</strong> respons apa pun yang membawa rahasia terlarang.
       </p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#start">Get started →</a>
-        <a class="btn btn-ghost" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">View on GitHub</a>
+        <a class="btn btn-primary" href="#start">Mulai sekarang →</a>
+        <a class="btn btn-ghost" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">Lihat di GitHub</a>
       </div>
       <div class="badges">
         <span class="badge">TypeScript · strict</span>
         <span class="badge">@modelcontextprotocol/sdk</span>
         <span class="badge">Node 18+</span>
-        <span class="badge">28 tests passing</span>
-        <span class="badge">ELK / Logstash ready</span>
+        <span class="badge">28 tes lulus</span>
+        <span class="badge">Siap ELK / Logstash</span>
       </div>
     </div>
   </header>
 
   <section id="how">
     <div class="wrap">
-      <p class="eyebrow center">Architecture</p>
-      <h2 class="center">A proxy that sits in the middle</h2>
+      <p class="eyebrow center">Arsitektur</p>
+      <h2 class="center">Proxy yang berdiri di tengah</h2>
       <p class="section-sub center">
-        Claude never talks to your internal API directly. Every tool result is
-        intercepted, scrubbed, audited — and blocked if it carries a hard secret.
+        Claude tidak pernah bicara langsung ke internal API Anda. Setiap hasil tool
+        dicegat, disensor, diaudit — dan diblokir bila membawa rahasia keras.
       </p>
       <div class="flow">
         <div class="node">
           <div class="ic">🤖</div>
           <h4>Claude</h4>
-          <small>MCP client</small>
+          <small>klien MCP</small>
         </div>
         <div class="arrow">⇄</div>
         <div class="node proxy">
           <div class="ic">🛡️</div>
           <h4>Priva-MCP</h4>
           <ul>
-            <li>dual-layer redaction</li>
-            <li>zero-trust block</li>
-            <li>audit trail</li>
-            <li>SIEM incidents</li>
+            <li>penyensoran dua lapis</li>
+            <li>blokir zero-trust</li>
+            <li>jejak audit</li>
+            <li>insiden SIEM</li>
           </ul>
         </div>
         <div class="arrow">⇄</div>
         <div class="node">
-          <div class="ic">🏦</div>
+          <div class="ic">🗄️</div>
           <h4>Internal API</h4>
           <small>REST / DB</small>
         </div>
@@ -257,38 +257,38 @@
 
   <section id="features" style="background: var(--bg-soft);">
     <div class="wrap">
-      <p class="eyebrow center">Why Priva-MCP</p>
-      <h2 class="center">Built for compliance, not convenience</h2>
+      <p class="eyebrow center">Kenapa Priva-MCP</p>
+      <h2 class="center">Dibangun untuk kepatuhan, bukan kenyamanan</h2>
       <div class="grid">
         <div class="card">
           <div class="ic">🎯</div>
-          <h3>Dual-layer redaction</h3>
-          <p>Layer 1 masks by field key name (precise); Layer 2 is a global regex fallback for free text. No more 16-digit NIK mistaken for a credit card.</p>
+          <h3>Penyensoran dua lapis</h3>
+          <p>Lapis 1 menyensor berdasarkan nama key field (presisi); Lapis 2 cadangan regex global untuk teks bebas. NIK 16 digit tak lagi salah dikira kartu kredit.</p>
         </div>
         <div class="card">
-          <div class="ic">🏦</div>
-          <h3>Field-level rules</h3>
-          <p>First-class handling for <code>cifNumber</code>, <code>accountNumber</code>, <code>pan</code>, <code>phoneNumber</code> and more — case-insensitive, collision-safe.</p>
+          <div class="ic">🏷️</div>
+          <h3>Aturan level field</h3>
+          <p>Penanganan kelas satu untuk <code>cifNumber</code>, <code>accountNumber</code>, <code>pan</code>, <code>phoneNumber</code> dan lainnya — case-insensitive, anti-tabrakan.</p>
         </div>
         <div class="card">
           <div class="ic">🔢</div>
-          <h3>Numeric safety</h3>
-          <p>Balances and amounts keep their JSON <em>number</em> type so the AI can still compute. Under strict mode they are zeroed, never corrupted to <code>"X"</code>.</p>
+          <h3>Aman secara numerik</h3>
+          <p>Saldo dan nominal tetap bertipe <em>number</em> JSON agar AI bisa berhitung. Pada mode ketat di-nol-kan, tidak pernah dirusak jadi <code>"X"</code>.</p>
         </div>
         <div class="card">
           <div class="ic">🚫</div>
-          <h3>Zero-trust block</h3>
-          <p>A leaked <code>password</code>, <code>pin</code>, <code>cvv</code> or <code>secret</code> blocks the entire response. Claude gets a safe error; the secret value is never logged.</p>
+          <h3>Blokir zero-trust</h3>
+          <p>Bocornya <code>password</code>, <code>pin</code>, <code>cvv</code> atau <code>secret</code> memblokir seluruh respons. Claude dapat error aman; nilai rahasia tak pernah dicatat.</p>
         </div>
         <div class="card">
           <div class="ic">📜</div>
           <h3>Audit + SIEM</h3>
-          <p>Every call logged to <code>audit.log</code> (JSON Lines). Severe breaches emit an ECS-style incident to stderr for ELK / Logstash ingestion.</p>
+          <p>Setiap panggilan dicatat ke <code>audit.log</code> (JSON Lines). Pelanggaran berat memunculkan insiden gaya ECS ke stderr untuk diserap ELK / Logstash.</p>
         </div>
         <div class="card">
           <div class="ic">🧪</div>
-          <h3>Type-safe &amp; tested</h3>
-          <p>Strict TypeScript, zero <code>any</code>, recursive traversal of untrusted JSON, and 28 unit tests via the built-in <code>node:test</code> runner.</p>
+          <h3>Type-safe &amp; teruji</h3>
+          <p>TypeScript ketat, tanpa <code>any</code>, traversal rekursif atas JSON tak tepercaya, dan 28 unit test lewat runner bawaan <code>node:test</code>.</p>
         </div>
       </div>
     </div>
@@ -296,20 +296,20 @@
 
   <section id="redaction">
     <div class="wrap">
-      <p class="eyebrow center">Field-level redaction</p>
-      <h2 class="center">Raw in → scrubbed out</h2>
-      <p class="section-sub center">What the internal API returns vs. what Claude actually receives (strict mode).</p>
+      <p class="eyebrow center">Penyensoran level field</p>
+      <h2 class="center">Mentah masuk → bersih keluar</h2>
+      <p class="section-sub center">Yang dikembalikan internal API vs. yang benar-benar diterima Claude (mode ketat).</p>
       <div class="ba">
         <div class="ba-row ba-head">
-          <div>Field</div><div>Raw (from API)</div><div>Returned to Claude</div>
+          <div>Field</div><div>Mentah (dari API)</div><div>Dikirim ke Claude</div>
         </div>
         <div class="ba-row"><div class="key">cifNumber</div><div class="in">CIF-7782001</div><div class="out">REDACTED-CIF</div></div>
         <div class="ba-row"><div class="key">accountNumber</div><div class="in">0012345678901</div><div class="out">XXXXXXXXX8901</div></div>
         <div class="ba-row"><div class="key">pan</div><div class="in">4111111111111111</div><div class="out">XXXX-XXXX-XXXX-1111</div></div>
         <div class="ba-row"><div class="key">phoneNumber</div><div class="in">+6281234567890</div><div class="out">+XXXXXXXXXX890</div></div>
         <div class="ba-row"><div class="key">email</div><div class="in">andi.wijaya@example.com</div><div class="out">a***a@e***.com</div></div>
-        <div class="ba-row"><div class="key">balance</div><div class="in">15750000</div><div class="out">0 &nbsp;<span style="color:var(--faint)">(number kept)</span></div></div>
-        <div class="ba-row"><div class="key">customerName</div><div class="in">Andi Wijaya</div><div class="out">Andi Wijaya &nbsp;<span style="color:var(--faint)">(not PII)</span></div></div>
+        <div class="ba-row"><div class="key">balance</div><div class="in">15750000</div><div class="out">0 &nbsp;<span style="color:var(--faint)">(tetap number)</span></div></div>
+        <div class="ba-row"><div class="key">customerName</div><div class="in">Andi Wijaya</div><div class="out">Andi Wijaya &nbsp;<span style="color:var(--faint)">(bukan PII)</span></div></div>
       </div>
     </div>
   </section>
@@ -317,22 +317,22 @@
   <section id="blocking" style="background: var(--bg-soft);">
     <div class="wrap">
       <p class="eyebrow center">Zero-trust</p>
-      <h2 class="center">When a hard secret leaks, nothing gets through</h2>
-      <p class="section-sub center">If the upstream accidentally includes a <code>pin</code>, the whole payload is dropped.</p>
+      <h2 class="center">Saat rahasia keras bocor, tidak ada yang lolos</h2>
+      <p class="section-sub center">Jika sumber tak sengaja menyertakan <code>pin</code>, seluruh payload dibuang.</p>
       <div class="demo">
         <div class="panelbox bad">
-          <span class="tag red">→ stdout (to Claude)</span>
+          <span class="tag red">→ stdout (ke Claude)</span>
           <pre>{
   "content": [{
     "type": "text",
-    "text": "Error: response blocked by
-      privacy &amp; compliance policy."
+    "text": "Error: respons diblokir oleh
+      kebijakan privasi &amp; kepatuhan."
   }],
   "isError": true
 }</pre>
         </div>
         <div class="panelbox good">
-          <span class="tag green">→ stderr (to ELK / Logstash)</span>
+          <span class="tag green">→ stderr (ke ELK / Logstash)</span>
           <pre>{
   "@timestamp": "...",
   "log.level": "error",
@@ -346,66 +346,66 @@
         </div>
       </div>
       <p class="section-sub center" style="margin-top:22px;">
-        The incident logs the <strong>key, path and reason</strong> — never the secret value itself.
+        Insiden mencatat <strong>key, path, dan alasan</strong> — bukan nilai rahasianya.
       </p>
     </div>
   </section>
 
   <section id="start">
     <div class="wrap">
-      <p class="eyebrow center">Implementation</p>
-      <h2 class="center">Run it in under a minute</h2>
+      <p class="eyebrow center">Implementasi</p>
+      <h2 class="center">Jalankan kurang dari satu menit</h2>
       <div class="steps">
         <div class="step">
           <h3><span class="num">1</span> Clone &amp; install</h3>
           <div class="code">
-            <button class="copy">copy</button>
+            <button class="copy">salin</button>
             <pre>git clone https://github.com/adhidevara/priva-mcp.git
 cd priva-mcp
 npm install</pre>
           </div>
         </div>
         <div class="step">
-          <h3><span class="num">2</span> Build &amp; test</h3>
+          <h3><span class="num">2</span> Build &amp; tes</h3>
           <div class="code">
-            <button class="copy">copy</button>
+            <button class="copy">salin</button>
             <pre>npm run build
-npm test    <span class="cm"># 28 passing</span>
-npm start   <span class="cm"># serve over stdio</span></pre>
+npm test    <span class="cm"># 28 lulus</span>
+npm start   <span class="cm"># jalan via stdio</span></pre>
           </div>
         </div>
       </div>
 
-      <h3 style="margin-top:48px; font-size:18px;">Connect to Claude Desktop</h3>
-      <p class="section-sub">Add this to <code>claude_desktop_config.json</code> (use an absolute path to <code>dist/server.js</code>), then restart Claude Desktop.</p>
+      <h3 style="margin-top:48px; font-size:18px;">Sambungkan ke Claude Desktop</h3>
+      <p class="section-sub">Tambahkan ini ke <code>claude_desktop_config.json</code> (pakai path absolut ke <code>dist/server.js</code>), lalu restart Claude Desktop.</p>
       <div class="code">
-        <button class="copy">copy</button>
+        <button class="copy">salin</button>
 <pre>{
   <span class="tok">"mcpServers"</span>: {
     <span class="tok">"priva-mcp"</span>: {
       <span class="tok">"command"</span>: <span class="str">"node"</span>,
-      <span class="tok">"args"</span>: [<span class="str">"/abs/path/to/priva-mcp/dist/server.js"</span>],
+      <span class="tok">"args"</span>: [<span class="str">"/path/absolut/ke/priva-mcp/dist/server.js"</span>],
       <span class="tok">"env"</span>: {
         <span class="tok">"COMPLIANCE_STRICT"</span>: <span class="str">"true"</span>,
-        <span class="tok">"AUDIT_LOG_PATH"</span>: <span class="str">"/abs/path/to/priva-mcp/audit.log"</span>
+        <span class="tok">"AUDIT_LOG_PATH"</span>: <span class="str">"/path/absolut/ke/priva-mcp/audit.log"</span>
       }
     }
   }
 }</pre>
       </div>
 
-      <h3 style="margin-top:40px; font-size:18px;">Call a tool</h3>
-      <p class="section-sub">Two tools ship out of the box. Mock CIFs: <code>CIF-7782001</code>, <code>CIF-7782002</code>.</p>
+      <h3 style="margin-top:40px; font-size:18px;">Panggil sebuah tool</h3>
+      <p class="section-sub">Dua tool tersedia langsung. CIF mock: <code>CIF-7782001</code>, <code>CIF-7782002</code>.</p>
       <div class="code">
-        <button class="copy">copy</button>
-<pre><span class="cm">// in Claude:</span>
+        <button class="copy">salin</button>
+<pre><span class="cm">// di Claude:</span>
 get_customer_profile  { cifNumber: <span class="str">"CIF-7782001"</span> }
 get_financial_report  { cifNumber: <span class="str">"CIF-7782001"</span> }
-<span class="cm">// → returns a fully masked, audited payload</span></pre>
+<span class="cm">// → mengembalikan payload yang sudah disensor &amp; diaudit</span></pre>
       </div>
 
       <div class="center" style="margin-top:48px;">
-        <a class="btn btn-primary" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">Read the full docs on GitHub →</a>
+        <a class="btn btn-primary" href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">Baca dokumentasi lengkap di GitHub →</a>
       </div>
     </div>
   </section>
@@ -413,30 +413,30 @@ get_financial_report  { cifNumber: <span class="str">"CIF-7782001"</span> }
   <footer>
     <div class="wrap">
       <div class="foot-in">
-        <div><span class="brand"><span class="logo">🛡️</span> Priva-MCP</span> — Privacy &amp; Compliance Layer</div>
+        <div><span class="brand"><span class="logo">🛡️</span> Priva-MCP</span> — Lapisan Privasi &amp; Kepatuhan</div>
         <div class="foot-links">
           <a href="https://github.com/adhidevara/priva-mcp" target="_blank" rel="noopener">GitHub</a>
           <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP</a>
-          <a href="#top">Back to top</a>
+          <a href="/">English</a>
+          <a href="#top">Ke atas</a>
         </div>
       </div>
       <p class="disclaimer">
-        Demo project. All data shown is synthetic test data — card numbers are valid
-        only in the Luhn-checksum sense. Not affiliated with any bank. Review and
-        harden before production use.
+        Proyek demo. Semua data yang ditampilkan adalah data uji sintetis — nomor
+        kartu hanya valid dalam pengertian checksum Luhn. Tidak terafiliasi dengan
+        institusi mana pun. Tinjau dan perkuat sebelum dipakai di produksi.
       </p>
     </div>
   </footer>
 
   <script>
-    // Copy-to-clipboard for code blocks
     document.querySelectorAll('.copy').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var pre = btn.parentElement.querySelector('pre');
         var text = pre ? pre.innerText : '';
         navigator.clipboard.writeText(text).then(function () {
           var old = btn.textContent;
-          btn.textContent = 'copied!';
+          btn.textContent = 'tersalin!';
           setTimeout(function () { btn.textContent = old; }, 1400);
         });
       });

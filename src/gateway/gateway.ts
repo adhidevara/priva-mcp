@@ -1,9 +1,9 @@
 /**
- * The gateway is the proxy layer that talks to the "internal" core-banking
- * resource. It returns RAW, unredacted data — scrubbing is the compliance
- * engine's job, applied downstream in the server. Keeping the two concerns
- * separate means the gateway can be swapped for a real Core/IST API client
- * without touching the privacy logic.
+ * The gateway is the proxy layer that talks to the "internal" API resource.
+ * It returns RAW, unredacted data — scrubbing is the compliance engine's job,
+ * applied downstream in the server. Keeping the two concerns separate means the
+ * gateway can be swapped for a real internal API client without touching the
+ * privacy logic.
  */
 
 import {

@@ -2,7 +2,7 @@
 /**
  * Priva-MCP — entry point.
  *
- * Wiring: Claude (client)  ⇄  THIS MCP SERVER  ⇄  Internal Gateway (Core/IST API)
+ * Wiring: Claude (client)  ⇄  THIS MCP SERVER  ⇄  Internal Gateway (internal API)
  *
  * Every tool call follows the same pipeline:
  *   1. Gateway fetches RAW data from the internal banking resource.
@@ -221,7 +221,7 @@ function createServer(): McpServer {
     {
       title: "Get Customer Profile",
       description:
-        "Retrieve a customer's banking profile from the core system by CIF " +
+        "Retrieve a customer's profile from the internal API by CIF " +
         "number. Sensitive fields (CIF, account number, debit-card PAN, email, " +
         "phone) are automatically masked, and balances are protected, by the " +
         "privacy layer before being returned.",
@@ -241,7 +241,7 @@ function createServer(): McpServer {
     {
       title: "Get Financial Report",
       description:
-        "Retrieve a customer's account statement from the core system by CIF " +
+        "Retrieve a customer's account statement from the internal API by CIF " +
         "number. Sensitive fields are masked and amounts are protected by the " +
         "privacy layer before being returned.",
       inputSchema: sharedInputSchema,

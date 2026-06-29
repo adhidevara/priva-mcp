@@ -1,7 +1,9 @@
-# Priva-MCP — Privacy & Compliance Layer (Banking Edition)
+# Priva-MCP — Privacy & Compliance Layer
+
+> 🇮🇩 Versi Bahasa Indonesia: [README.id.md](README.id.md)
 
 A man-in-the-middle **MCP proxy** that sits between Claude (the client) and an
-internal **Core Banking / IST API** (the resource). It intercepts the output of
+an **internal API** (the resource). It intercepts the output of
 internal tools and **automatically masks sensitive banking data** — CIF numbers,
 account numbers, debit-card PANs, balances, emails, phone numbers, national IDs —
 *before* anything is returned to Claude. If a field that must never leave the
@@ -10,7 +12,7 @@ Every call is recorded in an append-only audit trail, and severe breaches raise 
 structured incident log for an enterprise SIEM (ELK / Logstash).
 
 ```
-Claude (Client)  ⇄  Priva-MCP (this proxy)  ⇄  Core Banking / IST API
+Claude (Client)  ⇄  Priva-MCP (this proxy)  ⇄  Internal API
                        │
                        ├── compliance engine  → dual-layer redaction (key + regex)
                        ├── zero-trust block   → drops response on forbidden fields
@@ -48,7 +50,7 @@ stderr; sensitive values are masked at the field level, not by blind global rege
 ## Features
 
 - **Official MCP TypeScript SDK** (`@modelcontextprotocol/sdk`) over stdio.
-- **Two mock banking tools** that simulate pulling data from a core system:
+- **Two mock tools** that simulate pulling data from an internal API:
   - `get_customer_profile` — banking profile by CIF.
   - `get_financial_report` — account statement by CIF.
 - **Dual-layer redaction interceptor** — every tool output passes through the
@@ -88,7 +90,7 @@ priva-mcp/
 │   │   ├── patterns.ts      # KEY_RULES (Layer 1) + regex rules (Layer 2) + forbidden keys
 │   │   ├── redactor.ts      # ComplianceEngine (recursive redactObject)
 │   │   └── index.ts
-│   ├── gateway/             # Proxy logic + mock Core Banking data
+│   ├── gateway/             # Proxy logic + mock internal API data
 │   │   ├── mockData.ts      # banking records (CIF-keyed)
 │   │   ├── gateway.ts       # InternalGateway (returns RAW data)
 │   │   └── index.ts
@@ -438,7 +440,7 @@ incident reporting, and collects both the masked output and any critical
 violations.
 
 To add a category: append a `KeyRule` to `KEY_RULES` and/or a `RedactionRule` to
-`REDACTION_RULES`. To swap the mock gateway for a real Core/IST API: replace the
+`REDACTION_RULES`. To swap the mock gateway for a real internal API: replace the
 methods in `src/gateway/gateway.ts` — the compliance, audit, and incident layers
 stay untouched.
 
