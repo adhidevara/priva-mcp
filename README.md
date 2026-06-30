@@ -446,6 +446,41 @@ stay untouched.
 
 ---
 
+## Data flow — what reaches Anthropic
+
+The MCP server runs **locally** (Claude Desktop spawns it over stdio). But the
+Claude *model* runs on Anthropic's servers, so whatever a tool returns to the
+client is included in the conversation context sent to Anthropic. Priva-MCP's job
+is to make sure only **masked** data ever crosses that boundary.
+
+```
+        ── your machine (local) ─────────────────────┊── Anthropic (cloud) ──
+  Internal API ──raw──▶ Priva-MCP ──masked──▶ Claude Desktop ──masked only──▶ Claude model
+   (DB/REST)            (mask+block)            (MCP client)   ┊
+                            │                                  ┊
+                            ▼                                  ┊ trust boundary
+                   audit.log + ELK incident  ── stays local 🔒 ┊
+```
+
+- **Sent to Anthropic:** the masked tool output (e.g. `REDACTED-CIF`,
+  `XXXX-…-1111`, `balance: 0`) plus the prompts you type — the model needs them
+  to answer.
+- **Never sent:** raw PII (exists only in the local process's RAM), blocked
+  forbidden fields, and the `audit.log` / stderr incident logs — all stay on your
+  machine.
+- **Keep in mind:**
+  - A partial mask (e.g. last 4 digits) still leaves the machine; the full
+    secret does not.
+  - Your own chat messages are **not** scrubbed — Priva-MCP only filters *tool
+    output*, not your prompt. Don't paste raw PII directly into chat.
+  - With `COMPLIANCE_STRICT=false`, real balances/amounts are sent.
+  - Coverage equals rule quality — fields not matched by `KEY_RULES` fall back to
+    the Layer 2 regex; what it misses could pass through.
+  - Data sent to Anthropic is then subject to Anthropic's own data policy for your
+    plan; Priva-MCP minimizes *what* is sent, not its downstream retention.
+
+---
+
 ## Landing page (Vercel)
 
 A static landing page lives in [`web/`](web/index.html) — an intro to the project

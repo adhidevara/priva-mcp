@@ -413,6 +413,40 @@ di `src/gateway/gateway.ts` — lapisan compliance, audit, dan insiden tetap utu
 
 ---
 
+## Alur data — apa yang sampai ke Anthropic
+
+Server MCP berjalan **lokal** (Claude Desktop men-spawn-nya via stdio). Tapi
+*model* Claude berjalan di server Anthropic, jadi apa pun yang dikembalikan tool
+ke klien ikut masuk ke konteks percakapan yang dikirim ke Anthropic. Tugas
+Priva-MCP: memastikan hanya data **tersensor** yang menyeberangi batas itu.
+
+```
+        ── mesinmu (lokal) ──────────────────────────┊── Anthropic (cloud) ──
+  Internal API ─mentah─▶ Priva-MCP ─sensor─▶ Claude Desktop ─hanya tersensor─▶ Model Claude
+   (DB/REST)            (sensor+blokir)        (klien MCP)    ┊
+                            │                                 ┊
+                            ▼                                 ┊ batas kepercayaan
+                   audit.log + insiden ELK  ── tetap lokal 🔒 ┊
+```
+
+- **Dikirim ke Anthropic:** output tool yang tersensor (mis. `REDACTED-CIF`,
+  `XXXX-…-1111`, `balance: 0`) plus prompt yang kamu ketik — model butuh itu
+  untuk menjawab.
+- **Tidak pernah dikirim:** PII mentah (cuma ada di RAM proses lokal), field
+  terlarang yang diblokir, dan log `audit.log` / insiden stderr — semua tetap di
+  mesinmu.
+- **Perlu diingat:**
+  - Masker sebagian (mis. 4 digit akhir) tetap keluar; rahasia penuh tidak.
+  - Pesan chat-mu sendiri **tidak** disensor — Priva-MCP hanya menyaring *output
+    tool*, bukan prompt-mu. Jangan tempel PII asli langsung di chat.
+  - Dengan `COMPLIANCE_STRICT=false`, saldo/nominal asli ikut dikirim.
+  - Cakupan = kualitas aturan — field yang tak cocok `KEY_RULES` jatuh ke regex
+    Lapis 2; yang meleset bisa lolos.
+  - Data yang sampai ke Anthropic tunduk pada kebijakan data Anthropic sesuai
+    plan-mu; Priva-MCP meminimalkan *apa* yang dikirim, bukan retensinya.
+
+---
+
 ## Landing page (Vercel)
 
 Landing page statis ada di [`web/`](web/index.html) (EN) dan
